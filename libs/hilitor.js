@@ -13,6 +13,8 @@ function Hilitor(id, tag)
   var matchRegex = "";
   var openLeft = false;
   var openRight = false;
+  var matchedKeywords = null;
+  this.foundMatch = false;
 
   this.setMatchType = function(type)
   {
@@ -69,6 +71,16 @@ function Hilitor(id, tag)
           wordColor[regs[0].toLowerCase()] = colors[colorIdx++ % colors.length];
         }
 
+        this.foundMatch = true;
+
+        var matchedKeyword = regs[0].toLowerCase();
+        for (var keyword in matchedKeywords) {
+          if (keyword.toLowerCase() == matchedKeyword) {
+            matchedKeywords[keyword] = true;
+            break;
+          }
+        }
+
         var match = document.createElement(hiliteTag);
         match.appendChild(document.createTextNode(regs[0]));
         match.style.backgroundColor = wordColor[regs[0].toLowerCase()];
@@ -97,9 +109,20 @@ function Hilitor(id, tag)
   this.apply = function(input)
   {
     if(input == undefined || !input) return;
+
+    this.foundMatch = false;
+
+    matchedKeywords = {};
+    for (var i=0; i<input.length; i++) {
+      matchedKeywords[input[i]] = false;
+    }
+
+    input = input.join("|")
+
     this.remove();
     this.setRegex(input);
     this.hiliteWords(targetNode);
-  };
 
+    return matchedKeywords;
+  };
 }
