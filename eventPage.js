@@ -41,7 +41,7 @@
 		if (info.menuItemId == "addKeyword") {
 			var keyword = info.selectionText.trim();
 			storage.addKeyword(keyword);
-			highlightKeywords([keyword], tab.id);
+			highlightKeywords(storage.getKeywords(), tab.id);
 		}
 	}
 

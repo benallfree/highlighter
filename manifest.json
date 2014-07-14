@@ -10,8 +10,8 @@
 
 	"content_scripts": [
 		{
-			"matches": ["*://*/*"],
-			"js": ["libs/hilitor.js", "highlighter.js"]
+			"matches": ["*://www.odesk.com/*"],
+			"js": ["libs/arrive.js", "libs/hilitor.js", "highlighter.js"]
 		}
 	], 
 

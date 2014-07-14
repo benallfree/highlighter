@@ -1,10 +1,8 @@
 // Original JavaScript code by Chirp Internet: www.chirp.com.au
 // Please acknowledge use of this code by including this header.
 
-function Hilitor(id, tag)
+function Hilitor(tag)
 {
-
-  var targetNode = document.getElementById(id) || document.body;
   var hiliteTag = tag || "EM";
   var skipTags = new RegExp("^(?:" + hiliteTag + "|SCRIPT)$");
   var colors = ["#ff6", "#a0ffff", "#9f9", "#f99", "#f6f"];
@@ -107,9 +105,17 @@ function Hilitor(id, tag)
   };
 
   // start highlighting at target node
-  this.apply = function(input, removeExisting)
+  this.apply = function(elems, input, removeExisting)
   {
     if(input == undefined || !input) return;
+
+    if (typeof elems.length == "undefined") {
+      elems = [elems];
+    }
+
+    if (removeExisting) {
+      this.remove();
+    }
 
     for (var i=0; i<input.length; i++) {
       matchedKeywords[input[i]] = 0;
@@ -117,12 +123,11 @@ function Hilitor(id, tag)
 
     input = input.join("|")
 
-    if (removeExisting) {
-      this.remove();
-    }
-
     this.setRegex(input);
-    this.hiliteWords(targetNode);
+
+    for (var i=0; i<elems.length; i++) {
+      this.hiliteWords(elems[i]);
+    }
 
     return matchedKeywords;
   };
