@@ -5,7 +5,7 @@
 
 		chrome.contextMenus.create({
 			id: "addKeyword", 
-			title: "Add keyword", 
+			title: "Add \"%s\"", 
 			contexts: ["selection"]
 		});
 
@@ -39,8 +39,14 @@
 
 	function onContextMenuClicked(info, tab) {
 		if (info.menuItemId == "addKeyword") {
-			storage.addKeyword(info.selectionText);
+			var keyword = info.selectionText.trim();
+			storage.addKeyword(keyword);
+			highlightKeywords([keyword], tab.id);
 		}
+	}
+
+	function highlightKeywords(keywords, tabId) {
+		chrome.tabs.sendMessage(tabId, { message: "search-keywords", keywords: keywords });
 	}
 
 	init();

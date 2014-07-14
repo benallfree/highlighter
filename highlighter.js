@@ -1,5 +1,7 @@
 (function () {
 	var matchedKeywords = {};
+
+	var myHilitor = new Hilitor();
 	
 	function init() {
 		chrome.runtime.sendMessage({ message: "get-keywords" }, onKeywordsReceived);
@@ -8,14 +10,16 @@
 	}
 
 	function onMessageReceived(request, sender, sendResponse) {
-		if (request.message = "get-matched-keywords") {
+		if (request.message == "get-matched-keywords") {
 			sendResponse({ matchedKeywords: matchedKeywords });
+		}
+		else if (request.message == "search-keywords") {
+			onKeywordsReceived(request.keywords);
 		}
 	}
 
 	function onKeywordsReceived(keywords) {
-		var myHilitor = new Hilitor();
-		matchedKeywords = myHilitor.apply(keywords);
+		matchedKeywords = myHilitor.apply(keywords, false);
 
 		chrome.runtime.sendMessage({ message: "search-result", foundWords: myHilitor.foundMatch });
 	}

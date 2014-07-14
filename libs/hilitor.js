@@ -13,7 +13,7 @@ function Hilitor(id, tag)
   var matchRegex = "";
   var openLeft = false;
   var openRight = false;
-  var matchedKeywords = null;
+  var matchedKeywords = {};
   this.foundMatch = false;
 
   this.setMatchType = function(type)
@@ -76,7 +76,7 @@ function Hilitor(id, tag)
         var matchedKeyword = regs[0].toLowerCase();
         for (var keyword in matchedKeywords) {
           if (keyword.toLowerCase() == matchedKeyword) {
-            matchedKeywords[keyword] = true;
+            matchedKeywords[keyword]++;
             break;
           }
         }
@@ -97,6 +97,7 @@ function Hilitor(id, tag)
   // remove highlighting
   this.remove = function()
   {
+    matchedKeywords = {};
     var arr = document.getElementsByTagName(hiliteTag);
     while(arr.length && (el = arr[0])) {
       var parent = el.parentNode;
@@ -106,20 +107,20 @@ function Hilitor(id, tag)
   };
 
   // start highlighting at target node
-  this.apply = function(input)
+  this.apply = function(input, removeExisting)
   {
     if(input == undefined || !input) return;
 
-    this.foundMatch = false;
-
-    matchedKeywords = {};
     for (var i=0; i<input.length; i++) {
-      matchedKeywords[input[i]] = false;
+      matchedKeywords[input[i]] = 0;
     }
 
     input = input.join("|")
 
-    this.remove();
+    if (removeExisting) {
+      this.remove();
+    }
+
     this.setRegex(input);
     this.hiliteWords(targetNode);
 
