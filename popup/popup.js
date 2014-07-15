@@ -8,17 +8,18 @@ function matchedKeywordsResult(matchedKeywords) {
 			foundKeyword.attributes.count = matchedKeywords[keyword];
 
 			var childNodes = foundKeywords.children;
-
-			if (childNodes.length == 0) {
-				foundKeywords.appendChild(foundKeyword);
-			}
-			else {
-				for (var i=0; i<childNodes.length; i++) {
-					if (matchedKeywords[keyword] > childNodes[i].attributes.count) {
-						foundKeywords.insertBefore(foundKeyword, childNodes[i]);
-						break;
-					}
+			
+			var inserted = false
+			for (var i=0; i<childNodes.length; i++) {
+				if (matchedKeywords[keyword] > childNodes[i].attributes.count) {
+					foundKeywords.insertBefore(foundKeyword, childNodes[i]);
+					inserted = true;
+					break;
 				}
+			}
+
+			if (!inserted) {
+				foundKeywords.appendChild(foundKeyword);
 			}
 		}
 	}
