@@ -1,0 +1,27 @@
+<!DOCTYPE html5>
+<html>
+	<head>
+		<title>Skills - Highlighter </title>
+		<link rel="stylesheet" type="text/css" href="skills.css">
+	</head>
+	<body>
+		<h2>My Skills</h2>
+
+		<table id="skillsTable" class="skills">
+			<tr><th style="min-width: 100px;">Skill</th><th style="min-width: 150px;">Short Description</th><th style="min-width: 150px;">Long Description</th><th style="min-width: 150px;">Keywords</th><th style="min-width: 100px;"></th></tr>
+
+			<tr id="skillTemplate"><td class="skillName"></td><td class="shortDesc"></td><td class="longDesc"></td>
+			<td class="keywords"></td>
+			<td style="min-width: 100px;"><a href="#" class="edit">edit</a><a href="/skills/index.html" class="delete">delete</a></td></tr>
+		</table>
+
+		<div id="keywordTemplate" class="keyword">
+			<span class="text"></span>
+		</div>
+
+		<a class="add-new-btn" href="/skills/edit.html">+</a>
+
+		<script src="/storage.js"></script>
+		<script src="skills.js"></script>
+	</body>
+</html>

@@ -1,5 +1,17 @@
 body {
-	width: 180px;
+	width: 250px;
+	font-family: sans-serif;
+	font-size: 15px;
+}
+
+.top-bar a {
+	margin-left:14px;
+}
+.top-bar a:visited {
+	color: rgb(0, 0, 238);
+}
+.top-bar a:first-child {
+	margin-left: 0px;
 }
 
 .count {

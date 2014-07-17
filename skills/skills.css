@@ -1,0 +1,131 @@
+body {
+	font-family: sans-serif;
+}
+
+table {
+	font-size: 14px;
+}
+
+table.skills {
+	border: 1px solid gray;
+	border-collapse:collapse;
+}
+
+table.skills tr:nth-child(even) {
+	background-color:#f7f7f7;
+}
+table.skills tr:nth-child(odd)	{ 
+	background-color:#fff;
+}
+
+table.skills th, table.skills td {
+	border-right: 1px solid gray;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+table.skills th:last-child, table.skills td:last-child {
+	border-right: none;
+}
+table.skills .edit {
+	margin-left: 4px;
+}
+table.skills .delete {
+	margin-left: 16px;
+}
+
+.add-new-btn {
+	color: black;
+	text-decoration: none;
+	margin-top: 10px;
+	border: 1px solid black;
+	display: inline-block;
+	width: 24px;
+	height: 20px;
+	padding-top: 2px; 
+	text-align: center;
+	font-size: 18px;
+	line-height: 18px;
+	cursor: pointer;
+}
+
+input, textarea {
+	padding: 3px;
+	width: 100%;
+}
+
+.add-skill table td:last-child {
+	width: 260px;
+}
+.add-skill table td {
+	padding: 7px;
+}
+.add-skill button {
+	width: 60px;
+}
+.add-skill .cancel {
+	margin-left: 40px;
+}
+.add-skill .save {
+	float: right;
+	margin-right: 40px;
+}
+.add-skill input[name="keyword"] {
+	margin-bottom: 0px;
+}
+
+.keywords {
+	width: 100%;
+	min-height: 33px;
+	border: 1px solid gray;
+	border-top: none;
+	padding-bottom: 10px;
+	padding-right: 10px;
+	box-sizing: border-box;
+}
+.keywords .keyword {
+	height: 20px;
+	border: 1px solid gray;
+	display: inline-block;
+	margin-left: 10px;
+	margin-top: 10px;
+	padding-left: 5px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+}
+.keywords .keyword .text {
+	vertical-align: middle;
+	padding-right: 7px;
+}
+.keywords .keyword .cross {
+	padding-right: 7px;
+	padding-left: 7px;
+	border-left: 1px solid gray;
+	display: inline-block;
+	height: 100%;
+	cursor: pointer;
+	-webkit-user-select: none;
+}
+
+#skillsTable .keywords {
+	border-bottom: none;
+}
+#skillsTable .keywords .keyword {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+#keywordTemplate {
+	display: none;
+}
+
+.align-top {
+	vertical-align: top;
+}
+
+#skillTemplate {
+	display: none;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html5>
+<html>
+	<head>
+		<title>Add Skill - Highlighter </title>
+		<link rel="stylesheet" type="text/css" href="skills.css">
+	</head>
+	<body>
+		<h2>Add Skill</h2>
+
+		<form id="editForm" class="add-skill">
+			<table>
+				<tr><td>Skill Name</td><td><input id="skillName" name="skill" autofocus required/></td></tr>
+				<tr><td>Short Description</td><td><input id="short_desc" name="short_desc"/></td></tr>
+				<tr><td class="align-top">Long Description</td><td><textarea id="long_desc" name="long_desc" rows="8"></textarea></td></tr>
+				<tr>
+					<td class="align-top">Keywords</td>
+					<td>
+						<input id="keywordTextbox" name="keyword" placeholder="type keyword here, press enter"/>
+						<div id="keywords" class="keywords">
+							
+						</div>
+						<div id="keywordTemplate" class="keyword">
+							<span class="text"></span>
+							<span class="cross">x</span>
+						</div>
+					</td>
+				</tr>
+
+				<tr><td></td><td><button id="cancel" class="cancel" type="button">Cancel</button> <button id="save" class="save" type="submit">Save</button></td></tr>
+			</table>	
+		</form>
+
+		<script src="/storage.js"></script>
+		<script src="editSkill.js"></script>
+	</body>
+</html>
