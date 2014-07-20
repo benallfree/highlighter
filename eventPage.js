@@ -3,13 +3,23 @@
 	function init() {
 		chrome.runtime.onMessage.addListener(onMessageReceived);
 
+		createContextMenus();
+
+		chrome.contextMenus.onClicked.addListener(onContextMenuClicked);
+	}
+
+	function createContextMenus() {
 		chrome.contextMenus.create({
 			id: "addKeyword", 
 			title: "Add \"%s\"", 
 			contexts: ["selection"]
 		});
-
-		chrome.contextMenus.onClicked.addListener(onContextMenuClicked);
+		
+		chrome.contextMenus.create({
+			id: "compose", 
+			title: "Compose", 
+			contexts: ["editable"]
+		});
 	}
 
 	function searchResultsReceived(result, tabId) {
@@ -35,6 +45,10 @@
 			var keywords = storage.getKeywords();
 			sendResponse(keywords);
 		}
+		else if (request.message == "get-skills") {
+			var skills = storage.getSkills();
+			sendResponse(skills);
+		}
 	}
 
 	function onContextMenuClicked(info, tab) {
@@ -42,6 +56,9 @@
 			var keyword = info.selectionText.trim();
 			storage.addKeyword(keyword);
 			highlightKeywords(storage.getKeywords(), tab.id);
+		}
+		else if (info.menuItemId == "compose") {
+			chrome.tabs.sendMessage(tab.id, { message: "compose-textbox" });
 		}
 	}
 

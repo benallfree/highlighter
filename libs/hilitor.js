@@ -11,7 +11,7 @@ function Hilitor(tag)
   var matchRegex = "";
   var openLeft = false;
   var openRight = false;
-  var matchedKeywords = {};
+  var matchedKeywords = [];
   this.foundMatch = false;
 
   this.setMatchType = function(type)
@@ -72,9 +72,10 @@ function Hilitor(tag)
         this.foundMatch = true;
 
         var matchedKeyword = regs[0].toLowerCase();
-        for (var keyword in matchedKeywords) {
-          if (keyword.toLowerCase() == matchedKeyword) {
-            matchedKeywords[keyword]++;
+        for (var i=0; i<matchedKeywords.length; i++) {
+          var obj = matchedKeywords[i];
+          if (obj.keyword.toLowerCase() == matchedKeyword) {
+            obj.count++;
             break;
           }
         }
@@ -95,7 +96,7 @@ function Hilitor(tag)
   // remove highlighting
   this.remove = function()
   {
-    matchedKeywords = {};
+    matchedKeywords = [];
     var arr = document.getElementsByTagName(hiliteTag);
     while(arr.length && (el = arr[0])) {
       var parent = el.parentNode;
@@ -118,7 +119,10 @@ function Hilitor(tag)
     }
 
     for (var i=0; i<input.length; i++) {
-      matchedKeywords[input[i]] = 0;
+      matchedKeywords.push({
+        keyword: input[i], 
+        count: 0
+      });
     }
 
     input = input.join("|")
@@ -128,6 +132,14 @@ function Hilitor(tag)
     for (var i=0; i<elems.length; i++) {
       this.hiliteWords(elems[i]);
     }
+
+    matchedKeywords = matchedKeywords.filter(function(keyword) {
+      return keyword.count > 0;
+    });
+
+    matchedKeywords = matchedKeywords.sort(function(keywordA, keywordB) {
+      return keywordB.count > keywordA.count;
+    });
 
     return matchedKeywords;
   };

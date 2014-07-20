@@ -1,27 +1,12 @@
 function matchedKeywordsResult(matchedKeywords) {
 	var foundKeywords = document.getElementById("keywordsFound");
-	for (var keyword in matchedKeywords) {
-		if (matchedKeywords[keyword] > 0) {
+	for (var i=0; i<matchedKeywords.length; i++) {
+		var matchedKeyword = matchedKeywords[i];
 
-			var foundKeyword = document.createElement('div');
-			foundKeyword.innerHTML = "* " + keyword + "<span class='count'>(" + matchedKeywords[keyword] + ")</span>";
-			foundKeyword.attributes.count = matchedKeywords[keyword];
-
-			var childNodes = foundKeywords.children;
-			
-			var inserted = false
-			for (var i=0; i<childNodes.length; i++) {
-				if (matchedKeywords[keyword] > childNodes[i].attributes.count) {
-					foundKeywords.insertBefore(foundKeyword, childNodes[i]);
-					inserted = true;
-					break;
-				}
-			}
-
-			if (!inserted) {
-				foundKeywords.appendChild(foundKeyword);
-			}
-		}
+		var foundKeyword = document.createElement('div');
+		foundKeyword.innerHTML = "* " + matchedKeyword.keyword + "<span class='count'>(" + matchedKeyword.count + ")</span>";
+		
+		foundKeywords.appendChild(foundKeyword);
 	}
 }
 

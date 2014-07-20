@@ -8,11 +8,13 @@
 		keywords = document.getElementById("keywords"), 
 		cancel = document.getElementById("cancel"), 
 		save = document.getElementById("save"), 
+		keywordTextbox = document.getElementById("keywordTextbox"), 
 		oldName = null;
 
 	function init() {
-		var keywordTextbox = document.getElementById("keywordTextbox");
-		keywordTextbox.addEventListener("keypress", keywordBoxKeyPress);
+		addKeywordAutoComplete();
+
+		keywordTextbox.addEventListener("keydown", keywordBoxKeyPress);
 
 		cancel.addEventListener("click", function() {
 			location.href = "/skills/index.html";
@@ -24,6 +26,23 @@
 		if (key !== null) {
 			loadSkillFromStorage(key);
 		}
+	}
+
+	function addKeywordAutoComplete() {
+		var storedKeywords = storage.getKeywords();
+		autoComplt.enable(keywordTextbox, {
+			hintsFetcher : function (input, openList) {
+				var hints = [];
+
+				for (var i = 0; i < storedKeywords.length; i++) {
+					if (storedKeywords[i].indexOf(input) >= 0) {
+						hints.push(storedKeywords[i]);
+					}
+				}
+
+				openList(hints);
+			}
+		});
 	}
 
 	function loadSkillFromStorage(key) {
@@ -89,11 +108,7 @@
 	}
 
 	function onFormSubmitted(e) {
-		if(!this.checkValidity())
-		{
-			e.preventDefault();
-			return;
-		}
+		e.preventDefault();
 
 		var keywordsElem = keywords.querySelectorAll(".keyword .text");
 
