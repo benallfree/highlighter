@@ -70,17 +70,34 @@ var storage = new (function() {
 		}
 
 		storeSkills(skills);
+
+		chrome.runtime.getBackgroundPage(function(bg) {
+			bg.eventPage.createAddKeywordContextMenuForSkill(skill.name);
+		});
 	};
 
 	this.removeSkill = function(key) {
 		var skills = this.getSkills();
-		delete skills[key.toLowerCase()];
+		var lowerCaseKey = key.toLowerCase();
+		var skillName = skills[lowerCaseKey].name;
+		delete skills[lowerCaseKey];
 		storeSkills(skills);
+
+		chrome.runtime.getBackgroundPage(function(bg) {
+			bg.eventPage.removeAddKeywordContextMenuForSkill(skillName);
+		});
 	};
 
 	this.getSkill = function(key) {
 		var skills = this.getSkills();
 		return skills[key.toLowerCase()];
+	};
+
+	this.addKeywordToSkill = function(skillName, keyword) {
+		var skills = this.getSkills();
+		skills[skillName.toLowerCase()].keywords.push(keyword);
+		this.addKeyword(keyword);
+		storeSkills(skills);
 	};
 
 })();

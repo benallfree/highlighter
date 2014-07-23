@@ -26,6 +26,19 @@
 		if (key !== null) {
 			loadSkillFromStorage(key);
 		}
+
+		var keywordsToAdd = getQueryParam("keywords");
+		if (keywordsToAdd) {
+			keywordsToAdd = JSON.parse(keywordsToAdd);
+			addKeywords(keywordsToAdd);
+		}
+	}
+
+	function getQueryParam(paramName) {
+	    paramName = paramName.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + paramName + "=([^&#]*)"),
+	        results = regex.exec(location.search);
+	    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 
 	function addKeywordAutoComplete() {
@@ -51,10 +64,7 @@
 			skillName.value = skill.name;
 			shortDesc.value = skill.shortDesc;
 			longDesc.value = skill.longDesc;
-
-			for (var i=0; i<skill.keywords.length; i++) {
-				addKeyword(skill.keywords[i]);
-			}
+			addKeywords(skill.keywords);
 
 			oldName = skill.name;
 		}
@@ -87,6 +97,12 @@
 			keywords.appendChild(keywordElem);
 		}
 	}
+
+	function addKeywords(keywords) {
+		for (var i=0; i<keywords.length; i++) {
+			addKeyword(keywords[i]);
+		}
+	};
 
 	function keywordAlreadyExist(keyword) {
 		var keywordsElem = keywords.querySelectorAll(".keyword .text");
