@@ -82,13 +82,14 @@
 			e.preventDefault();
 
 			if (this.value.length > 0) {
-				addKeyword(this.value);
+				addKeywords(this.value.split(","));
 				this.value = "";
 			}
 		}
 	}
 
 	function addKeyword(keyword) {
+		keyword = keyword.trim();
 		if (!keywordAlreadyExist(keyword)) {
 			var keywordElem = keywordTemplate.cloneNode(true);
 			keywordElem.removeAttribute("id");
