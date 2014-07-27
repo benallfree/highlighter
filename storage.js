@@ -1,9 +1,5 @@
 var storage = new (function() {
 
-	var defaultKeywords = [
-		"php", "wordpress", "laravel", "rails", "ruby on rails" 
-	];
-
 	function storeObject(name, obj) {
 		localStorage.setItem(name, JSON.stringify(obj));
 		return obj;
@@ -20,35 +16,20 @@ var storage = new (function() {
 		return obj;
 	}
 
-	function storeKeywords(keywords) {
-		keywords = keywords.sort(function(a, b) {
-			return a.length < b.length;
-		});
-
-		storeObject("search_keywords", keywords);
-
-		return keywords;
-	}
-
 	this.getKeywords = function() {
-		var keywords = getObject("search_keywords", defaultKeywords, storeKeywords);
-		return keywords;
-	};
+		var keywords = [];
+		var skills = this.getSkills();
 
-	this.addKeyword = function(keyword) {
-		var lowerCaseKeyword = keyword.toLowerCase();
-		var keywords = this.getKeywords();
-
-		for (var i=0; i<keywords.length; i++) {
-			if (lowerCaseKeyword == keywords[i].toLowerCase()) {
-				return false;
-			}
-		}
-
-		keywords.push(keyword);
-		storeKeywords(keywords);
-
-		return true;
+    for (var skill_name in skills)
+    {
+      var skill = skills[skill_name];
+  		for (var i=0; i<skill.keywords.length; i++) {
+  			keywords.push(skill.keywords[i].toLowerCase());
+  		}
+    }
+    return keywords.filter( function(value, index, self) { 
+      return self.indexOf(value) === index;
+    });
 	};
 
 	function storeSkills(skills) {
@@ -64,10 +45,6 @@ var storage = new (function() {
 		var skills = this.getSkills();
 
 		skills[lowerCaseSkillName] = skill;
-
-		for (var i=0; i<skill.keywords.length; i++) {
-			this.addKeyword(skill.keywords[i]);
-		}
 
 		storeSkills(skills);
 
@@ -95,9 +72,20 @@ var storage = new (function() {
 
 	this.addKeywordToSkill = function(skillName, keyword) {
 		var skills = this.getSkills();
-		skills[skillName.toLowerCase()].keywords.push(keyword);
-		this.addKeyword(keyword);
-		storeSkills(skills);
+    var is_found = false;
+    var keywords = skills[skillName.toLowerCase()].keywords;
+		for (var i=0; i<keywords.length; i++) {
+      if(keywords[i].toLowerCase() == keyword.toLowerCase())
+      {
+        is_found = true;
+        break;
+      }
+		}
+    if(!is_found)
+    {
+			skills[skillName.toLowerCase()].keywords.push(keywrd);
+  		storeSkills(skills);
+    }
 	};
 
 })();
