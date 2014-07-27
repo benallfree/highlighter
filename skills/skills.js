@@ -22,7 +22,6 @@
 		skillElem.removeAttribute("id");
 		skillElem.getElementsByClassName("skillName")[0].innerText = skill.name;
 		skillElem.getElementsByClassName("shortDesc")[0].innerText = skill.shortDesc;
-		skillElem.getElementsByClassName("longDesc")[0].innerText = skill.longDesc;
 		skillElem.getElementsByClassName("edit")[0].href = "/skills/edit.html?key=" + key;
 
 		var deleteBtn = skillElem.getElementsByClassName("delete")[0];

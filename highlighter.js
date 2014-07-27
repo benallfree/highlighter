@@ -130,7 +130,7 @@
 	function getCombinedSkillsProps(skills) {
 		var combinedProps = {
 				name: skills[0].name, 
-				shortDesc: skills[0].shortDesc, 
+				shortDesc: "* " + skills[0].shortDesc, 
 				longDesc: skills[0].longDesc
 			};
 
@@ -138,13 +138,13 @@
 			for (var i=1; i<skills.length - 1; i++) {
 				var skill = skills[i];
 				combinedProps.name += ", " + skill.name;
-				combinedProps.shortDesc += "\n" + skill.shortDesc;
+				combinedProps.shortDesc += "\n* " + skill.shortDesc;
 				combinedProps.longDesc += "\n\n" + skill.longDesc;
 			}
 
 			var skill = skills[skills.length -1];
 			combinedProps.name += " and " + skill.name;
-			combinedProps.shortDesc += "\n" + skill.shortDesc;
+			combinedProps.shortDesc += "\n* " + skill.shortDesc;
 			combinedProps.longDesc += "\n\n" + skill.longDesc;
 		}
 
