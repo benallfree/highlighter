@@ -108,7 +108,7 @@ function Hilitor(tag)
   // start highlighting at target node
   this.apply = function(elems, input, removeExisting)
   {
-    if(input == undefined || !input) return;
+    if(input == undefined || !input || input.length <= 0) return;
 
     if (typeof elems.length == "undefined") {
       elems = [elems];
