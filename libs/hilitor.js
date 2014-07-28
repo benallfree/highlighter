@@ -71,10 +71,13 @@ function Hilitor(tag)
 
         this.foundMatch = true;
 
-        var matchedKeyword = regs[0].toLowerCase();
+        var matchedKeyword = regs[0], 
+          matchedKeywordLowerCase = matchedKeyword.toLowerCase();
+
         for (var i=0; i<matchedKeywords.length; i++) {
           var obj = matchedKeywords[i];
-          if (obj.keyword.toLowerCase() == matchedKeyword) {
+          if (obj.keyword.toLowerCase() == matchedKeywordLowerCase) {
+            obj.keyword = matchedKeyword;
             obj.count++;
             break;
           }
