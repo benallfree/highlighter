@@ -39,8 +39,8 @@
 			keywordsToSearch = request.keywords;
 			highlightKeywords(true);
 		}
-		else if (request.message == "compose-textbox") {
-			composeTextbox(document.activeElement);
+		else if (request.message == "compose") {
+			composeTextbox(document.activeElement, request.menuId);
 		}
 	}
 
@@ -69,7 +69,7 @@
 		chrome.runtime.sendMessage({ message: "search-result", foundWords: myHilitor.foundMatch, matchedKeywords: matchedKeywords });
 	}
 
-	function composeTextbox(textbox) {
+	function composeTextbox(textbox, menuId) {
 		chrome.runtime.sendMessage({ message: "get-skills", keywords: matchedKeywords }, function(skills) {
 
 			var matchingSkills = getMatchingSkills(matchedKeywords, skills);
@@ -78,9 +78,29 @@
 				var combinedProps = getCombinedSkillsProps(matchingSkills), 
 					combinedKeywords = getCombinedKeywords(matchedKeywords);
 
-				var text = combinedProps.name + "? Look no further. I have deep experience in " + getCombinedKeywords(matchedKeywords) + " and would love to help.\n";
-				text += "\n" + combinedProps.shortDesc + "\n";
-				text +=	"\n" + combinedProps.longDesc + "\n";
+				var text = "";
+
+				if (menuId == "composeAll" || menuId == "composeSkillNames") {
+					text += combinedProps.name + "? Look no further. ";
+				}
+
+				if (menuId == "composeAll" || menuId == "composeKeywords") {
+					text += "I have deep experience in " + getCombinedKeywords(matchedKeywords) + " and would love to help.";
+					if (menuId == "composeAll") {
+						text += "\n\n";
+					}
+				}
+
+				if (menuId == "composeAll" || menuId == "composeShortDesc") {
+					text += combinedProps.shortDesc + "\n";
+					if (menuId == "composeAll") {
+						text += "\n";
+					}
+				}
+
+				if (menuId == "composeAll" || menuId == "composeLongDesc") {
+					text +=	combinedProps.longDesc + "\n";
+				}
 
 				textbox.value = text;
 			}

@@ -38,6 +38,41 @@ var eventPage = new (function () {
 			title: "Compose", 
 			contexts: ["editable"]
 		});
+
+		chrome.contextMenus.create({
+			id: "composeAll", 
+			parentId: "compose", 
+			title: "All", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeSkillNames", 
+			parentId: "compose", 
+			title: "Skill names", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeKeywords", 
+			parentId: "compose", 
+			title: "Keywords", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeShortDesc", 
+			parentId: "compose", 
+			title: "Short descriptions", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeLongDesc", 
+			parentId: "compose", 
+			title: "Long descriptions", 
+			contexts: ["editable"]
+		});
 	}
 
 	this.createAddKeywordContextMenuForSkill = function(skillName, dontCreateAddAsNew) {
@@ -106,8 +141,8 @@ var eventPage = new (function () {
 		else if (info.parentMenuItemId == "addKeyword") {
 			onAddKeywordClicked(info, tab);
 		}
-		else if (info.menuItemId == "compose") {
-			chrome.tabs.sendMessage(tab.id, { message: "compose-textbox" });
+		else if (info.parentMenuItemId == "compose") {
+			onComposeClicked(info, tab);
 		}
 	}
 
@@ -121,6 +156,10 @@ var eventPage = new (function () {
 			storage.addKeywordToSkill(skillName, keyword);
 			highlightKeywords(storage.getKeywords(), tab.id);
 		}
+	}
+
+	function onComposeClicked(info, tab) {
+		chrome.tabs.sendMessage(tab.id, { message: "compose", menuId: info.menuItemId });
 	}
 
 	function createNewSkillWithKeywords(keywords) {
