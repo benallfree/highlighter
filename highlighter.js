@@ -82,7 +82,7 @@
 				text += "\n" + combinedProps.shortDesc + "\n";
 				text +=	"\n" + combinedProps.longDesc + "\n";
 
-				textbox.innerText = text;
+				textbox.value = text;
 			}
 		});
 	}
