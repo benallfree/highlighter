@@ -20,16 +20,16 @@ var storage = new (function() {
 		var keywords = [];
 		var skills = this.getSkills();
 
-    for (var skill_name in skills)
-    {
-      var skill = skills[skill_name];
-  		for (var i=0; i<skill.keywords.length; i++) {
-  			keywords.push(skill.keywords[i].toLowerCase());
-  		}
-    }
-    return keywords.filter( function(value, index, self) { 
-      return self.indexOf(value) === index;
-    });
+		for (var skill_name in skills)
+		{
+			var skill = skills[skill_name];
+			for (var i=0; i<skill.keywords.length; i++) {
+				keywords.push(skill.keywords[i].toLowerCase());
+			}
+		}
+		return keywords.filter( function(value, index, self) { 
+			return self.indexOf(value) === index;
+		});
 	};
 
 	function storeSkills(skills) {
@@ -50,6 +50,7 @@ var storage = new (function() {
 
 		chrome.runtime.getBackgroundPage(function(bg) {
 			bg.eventPage.createAddKeywordContextMenuForSkill(skill.name);
+			bg.eventPage.highlightKeywordsInAllTabs();
 		});
 	};
 
@@ -62,6 +63,7 @@ var storage = new (function() {
 
 		chrome.runtime.getBackgroundPage(function(bg) {
 			bg.eventPage.removeAddKeywordContextMenuForSkill(skillName);
+			bg.eventPage.highlightKeywordsInAllTabs();
 		});
 	};
 
@@ -72,20 +74,24 @@ var storage = new (function() {
 
 	this.addKeywordToSkill = function(skillName, keyword) {
 		var skills = this.getSkills();
-    var is_found = false;
-    var keywords = skills[skillName.toLowerCase()].keywords;
+		var is_found = false;
+		var keywords = skills[skillName.toLowerCase()].keywords;
 		for (var i=0; i<keywords.length; i++) {
-      if(keywords[i].toLowerCase() == keyword.toLowerCase())
-      {
-        is_found = true;
-        break;
-      }
+	  		if(keywords[i].toLowerCase() == keyword.toLowerCase())
+			{
+				is_found = true;
+				break;
+			}
 		}
-    if(!is_found)
-    {
-			skills[skillName.toLowerCase()].keywords.push(keywrd);
-  		storeSkills(skills);
-    }
+		if(!is_found)
+		{
+			skills[skillName.toLowerCase()].keywords.push(keyword);
+			storeSkills(skills);
+
+			chrome.runtime.getBackgroundPage(function(bg) {
+				bg.eventPage.highlightKeywordsInAllTabs();
+			});
+		}
 	};
 
 })();

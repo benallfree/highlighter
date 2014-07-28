@@ -131,6 +131,15 @@ var eventPage = new (function () {
 		chrome.tabs.sendMessage(tabId, { message: "search-keywords", keywords: keywords });
 	}
 
+	this.highlightKeywordsInAllTabs = function() {
+		var keywords = storage.getKeywords();
+		chrome.tabs.query({ url: "*://www.odesk.com/*" }, function(tabs) {
+			for (var i=0; i<tabs.length; i++) {
+				highlightKeywords(keywords, tabs[i].id);
+			}
+		});
+	}
+
 	init();
 
 })();
