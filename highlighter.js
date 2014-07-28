@@ -3,7 +3,8 @@
 		{ check: "#jsJobResults", actual: "#jsJobResults article" },
 		{ check: "#mcMessages", actual: "#mcMessages .oMessageGrid tr td:nth-child(3), #threadPosts .oMCMessageContent" },
 		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory" },
-		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p"},
+		// Apply to job page
+		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2"},
 		{ check: ".jsSearchResults", actual: ".jsSearchResults article" },
 		{ check: ".oTable", actual: ".oTable tr td:nth-child(2)" }
 	];
