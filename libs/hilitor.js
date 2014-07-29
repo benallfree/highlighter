@@ -71,10 +71,13 @@ function Hilitor(tag)
 
         this.foundMatch = true;
 
-        var matchedKeyword = regs[0].toLowerCase();
+        var matchedKeyword = regs[0], 
+          matchedKeywordLowerCase = matchedKeyword.toLowerCase();
+
         for (var i=0; i<matchedKeywords.length; i++) {
           var obj = matchedKeywords[i];
-          if (obj.keyword.toLowerCase() == matchedKeyword) {
+          if (obj.keyword.toLowerCase() == matchedKeywordLowerCase) {
+            obj.keyword = matchedKeyword;
             obj.count++;
             break;
           }
@@ -108,7 +111,7 @@ function Hilitor(tag)
   // start highlighting at target node
   this.apply = function(elems, input, removeExisting)
   {
-    if(input == undefined || !input) return;
+    if(input == undefined || !input || input.length <= 0) return;
 
     if (typeof elems.length == "undefined") {
       elems = [elems];

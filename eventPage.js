@@ -38,6 +38,41 @@ var eventPage = new (function () {
 			title: "Compose", 
 			contexts: ["editable"]
 		});
+
+		chrome.contextMenus.create({
+			id: "composeAll", 
+			parentId: "compose", 
+			title: "All", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeSkillNames", 
+			parentId: "compose", 
+			title: "Skill names", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeKeywords", 
+			parentId: "compose", 
+			title: "Keywords", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeShortDesc", 
+			parentId: "compose", 
+			title: "Short descriptions", 
+			contexts: ["editable"]
+		});
+
+		chrome.contextMenus.create({
+			id: "composeLongDesc", 
+			parentId: "compose", 
+			title: "Long descriptions", 
+			contexts: ["editable"]
+		});
 	}
 
 	this.createAddKeywordContextMenuForSkill = function(skillName, dontCreateAddAsNew) {
@@ -106,8 +141,8 @@ var eventPage = new (function () {
 		else if (info.parentMenuItemId == "addKeyword") {
 			onAddKeywordClicked(info, tab);
 		}
-		else if (info.menuItemId == "compose") {
-			chrome.tabs.sendMessage(tab.id, { message: "compose-textbox" });
+		else if (info.parentMenuItemId == "compose") {
+			onComposeClicked(info, tab);
 		}
 	}
 
@@ -123,12 +158,25 @@ var eventPage = new (function () {
 		}
 	}
 
+	function onComposeClicked(info, tab) {
+		chrome.tabs.sendMessage(tab.id, { message: "compose", menuId: info.menuItemId });
+	}
+
 	function createNewSkillWithKeywords(keywords) {
 		chrome.tabs.create({ url: "/skills/edit.html?keywords=" + encodeURIComponent(JSON.stringify(keywords)) });
 	}
 
 	function highlightKeywords(keywords, tabId) {
 		chrome.tabs.sendMessage(tabId, { message: "search-keywords", keywords: keywords });
+	}
+
+	this.highlightKeywordsInAllTabs = function() {
+		var keywords = storage.getKeywords();
+		chrome.tabs.query({ url: "*://www.odesk.com/*" }, function(tabs) {
+			for (var i=0; i<tabs.length; i++) {
+				highlightKeywords(keywords, tabs[i].id);
+			}
+		});
 	}
 
 	init();
