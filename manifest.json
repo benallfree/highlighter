@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Highlighter",
-	"version": "1.8",
+	"version": "1.9",
 
 	"background": {
 		"scripts": ["storage.js", "eventPage.js"],
