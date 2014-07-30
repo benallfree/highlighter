@@ -71,17 +71,21 @@ function Hilitor(tag)
           wordColor[regs[0].toLowerCase()] = colors[colorIdx++ % colors.length];
         }
 
-        this.foundMatch = true;
+        // don't increment keyword count if it's a truncated text because a full text also exists for the truncated text, 
+        // so we don't want it to be counted twice
+        if (node.parentNode.className.indexOf("jsTruncated") === -1) {
+          this.foundMatch = true;
 
-        var matchedKeyword = regs[0], 
-          matchedKeywordLowerCase = matchedKeyword.toLowerCase();
+          var matchedKeyword = regs[0], 
+            matchedKeywordLowerCase = matchedKeyword.toLowerCase();
 
-        for (var i=0; i<matchedKeywords.length; i++) {
-          var obj = matchedKeywords[i];
-          if (obj.keyword.toLowerCase() == matchedKeywordLowerCase) {
-            obj.keyword = matchedKeyword;
-            obj.count++;
-            break;
+          for (var i=0; i<matchedKeywords.length; i++) {
+            var obj = matchedKeywords[i];
+            if (obj.keyword.toLowerCase() == matchedKeywordLowerCase) {
+              obj.keyword = matchedKeyword;
+              obj.count++;
+              break;
+            }
           }
         }
 

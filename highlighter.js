@@ -123,7 +123,9 @@
 					keywrodsParam += matchedKws[i].keyword;
 				}
 
-				$applyBtn.href += "?_oes=" + encodeURIComponent(keywrodsParam);
+				if (keywordsParam.length > 0) {
+					$applyBtn.href += "?_oes=" + encodeURIComponent(keywrodsParam);
+				}
 			}
 		}
 	}
