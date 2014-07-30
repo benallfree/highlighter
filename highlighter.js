@@ -29,7 +29,7 @@
 				keywordsToSearch = keywords;
 
 				keywordsToPassToNextPage();
-				
+
 				highlightKeywords(true);
 
 				document.arrive(activeSelector, function() {
@@ -76,7 +76,12 @@
 		}
 
 		if (!(elemsToSearch instanceof Array)) {
-			elemsToSearch = Array.prototype.slice.call(elemsToSearch);
+			if (typeof elemsToSearch.length === "undefined") {
+				elemsToSearch = [elemsToSearch];
+			}
+			else {
+				elemsToSearch = Array.prototype.slice.call(elemsToSearch);
+			}
 		}
 		elemsToSearch.push(passedKeywordsElem);
 

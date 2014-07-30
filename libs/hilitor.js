@@ -4,7 +4,7 @@
 function Hilitor(tag)
 {
   var hiliteTag = tag || "EM";
-  var skipTags = new RegExp("^(?:" + hiliteTag + "|SCRIPT)$");
+  var skipTags = new RegExp("^(?:SCRIPT)$");
   var colors = ["#ff6", "#a0ffff", "#9f9", "#f99", "#f6f"];
   var wordColor = [];
   var colorIdx = 0;
@@ -61,7 +61,9 @@ function Hilitor(tag)
 
     if(node.hasChildNodes()) {
       for(var i=0; i < node.childNodes.length; i++)
-        this.hiliteWords(node.childNodes[i]);
+        if (node.childNodes[i].className !== 'hilitor') {
+          this.hiliteWords(node.childNodes[i]);
+        }
     }
     if(node.nodeType == 3) { // NODE_TEXT
       if((nv = node.nodeValue) && (regs = matchRegex.exec(nv))) {
@@ -88,6 +90,7 @@ function Hilitor(tag)
         match.style.backgroundColor = wordColor[regs[0].toLowerCase()];
         match.style.fontStyle = "inherit";
         match.style.color = "#000";
+        match.className = 'hilitor';
 
         var after = node.splitText(regs.index);
         after.nodeValue = after.nodeValue.substring(regs[0].length);
