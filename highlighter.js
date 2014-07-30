@@ -2,6 +2,7 @@
 	var selectors = [
 		{ check: "#jsJobResults", actual: "#jsJobResults article" },
 		{ check: "#mcMessages", actual: "#mcMessages .oMessageGrid tr td:nth-child(3), #threadPosts .oMCMessageContent" },
+		// Job description page
 		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory" },
 		// Apply to job page
 		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2"},
@@ -9,17 +10,26 @@
 		{ check: ".oTable", actual: ".oTable tr td:nth-child(2)" }
 	];
 
-	var activeSelector = null,
+	var checkSelector = null, 
+		activeSelector = null,
 		matchedKeywords = {},
 		keywordsToSearch = null, 
+		passedKeywordsElem = null,
 		myHilitor = new Hilitor();
 	
 	function init() {
+		var keywordsParam = Utils.getParameterByName("_oes");
+		passedKeywordsElem = document.createElement("div");
+		passedKeywordsElem.innerText = keywordsParam;
+
 		activeSelector = getHighlightableAreaSelector();
 
 		if (activeSelector) {
 			chrome.runtime.sendMessage({ message: "get-keywords" }, function(keywords) {
 				keywordsToSearch = keywords;
+
+				keywordsToPassToNextPage();
+				
 				highlightKeywords(true);
 
 				document.arrive(activeSelector, function() {
@@ -27,7 +37,7 @@
 				});
 			});
 
-			chrome.runtime.onMessage.addListener(onMessageReceived);	
+			chrome.runtime.onMessage.addListener(onMessageReceived);
 		}
 	}
 
@@ -48,6 +58,7 @@
 		for (var i=0; i<selectors.length; i++) {
 			var elems = document.querySelectorAll(selectors[i].check);
 			if (elems.length > 0) {
+				checkSelector = selectors[i].check;
 				return selectors[i].actual;
 			}
 		}
@@ -64,9 +75,52 @@
 			}*/
 		}
 
+		if (!(elemsToSearch instanceof Array)) {
+			elemsToSearch = Array.prototype.slice.call(elemsToSearch);
+		}
+		elemsToSearch.push(passedKeywordsElem);
+
 		matchedKeywords = myHilitor.apply(elemsToSearch, keywordsToSearch, reset);
 
 		chrome.runtime.sendMessage({ message: "search-result", foundWords: myHilitor.foundMatch, matchedKeywords: matchedKeywords });
+	}
+
+	function keywordsToPassToNextPage() {
+		if (checkSelector == "#jobDescriptionSection") {
+			var $applyBtn = document.querySelectorAll(".oBtnPrimary[href^='/job/']")[0];
+
+			if ($applyBtn) {
+				var paraHeadingsToExclude = [
+					"job description:"
+				];
+
+				var parasToInclude = [];
+
+				$jobDescriptionParagraphs = document.querySelectorAll("#jobDescriptionSection div[name='sku'] > p");
+				for (var i=0; i<$jobDescriptionParagraphs.length; i++) {
+					var $heading = $jobDescriptionParagraphs[i].querySelectorAll("strong")[0];
+					if ($heading) {
+						var paraTitle = $heading.innerText.toLowerCase();
+						if (paraTitle.length > 0 && paraHeadingsToExclude.indexOf(paraTitle) === -1) {
+							parasToInclude.push($jobDescriptionParagraphs[i]);
+						}
+					}
+				}
+
+				var tempHilitor = new Hilitor();
+				var matchedKws = tempHilitor.apply(parasToInclude, keywordsToSearch, false);
+
+				var keywrodsParam = "";
+				for (var i=0; i<matchedKws.length; i++) {
+					if (i !== 0) {
+						keywrodsParam += ",";
+					}
+					keywrodsParam += matchedKws[i].keyword;
+				}
+
+				$applyBtn.href += "?_oes=" + encodeURIComponent(keywrodsParam);
+			}
+		}
 	}
 
 	function composeTextbox(textbox, menuId) {

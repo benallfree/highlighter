@@ -22,7 +22,7 @@
 
 		editForm.addEventListener("submit", onFormSubmitted);
 
-		var key = getParameterByName("key");
+		var key = Utils.getParameterByName("key");
 		if (key !== null) {
 			loadSkillFromStorage(key);
 		}
@@ -68,13 +68,6 @@
 
 			oldName = skill.name;
 		}
-	}
-
-	function getParameterByName(name) {
-		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-			results = regex.exec(location.search);
-		return results == null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 
 	function keywordBoxKeyPress(e) {
