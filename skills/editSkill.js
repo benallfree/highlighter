@@ -128,9 +128,9 @@
 		}
 
 		var skill = {
-			name: skillName.value, 
-			shortDesc: shortDesc.value, 
-			longDesc: longDesc.value, 
+			name: skillName.value.trim(), 
+			shortDesc: shortDesc.value.trim(), 
+			longDesc: longDesc.value.trim(), 
 			keywords: keywordsArr
 		}
 
