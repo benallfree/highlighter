@@ -142,14 +142,11 @@
 				var text = "";
 
 				if (menuId == "composeAll" || menuId == "composeSkillNames") {
-					text += combinedProps.name + "? Look no further. ";
+					text += combinedProps.name + " are among my areas of expertise. I think I can help.\n\n";
 				}
 
-				if (menuId == "composeAll" || menuId == "composeKeywords") {
-					text += "I have deep experience in " + getCombinedKeywords(matchedKeywords) + " and would love to help.";
-					if (menuId == "composeAll") {
-						text += "\n\n";
-					}
+				if ( menuId == "composeKeywords") {
+					text += getCombinedKeywords(matchedKeywords) + "\n";
 				}
 
 				if (menuId == "composeAll" || menuId == "composeShortDesc") {
