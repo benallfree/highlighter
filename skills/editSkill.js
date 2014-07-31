@@ -23,7 +23,7 @@
 		editForm.addEventListener("submit", onFormSubmitted);
 
 		var key = Utils.getParameterByName("key");
-		if (key !== null) {
+		if (key !== "") {
 			loadSkillFromStorage(key);
 		}
 

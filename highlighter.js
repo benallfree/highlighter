@@ -1,17 +1,16 @@
 (function () {
 	var selectors = [
-		{ check: "#jsJobResults", actual: "#jsJobResults article" },
+		{ check: "#jsJobResults", actual: "#jsJobResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreClasses: ['oMore'] },
 		{ check: "#mcMessages", actual: "#mcMessages .oMessageGrid tr td:nth-child(3), #threadPosts .oMCMessageContent" },
 		// Job description page
 		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory" },
 		// Apply to job page
-		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2"},
-		{ check: ".jsSearchResults", actual: ".jsSearchResults article" },
+		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2", ignoreClasses: ['oMore']},
+		{ check: ".jsSearchResults", actual: ".jsSearchResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreClasses: ['oMore']  },
 		{ check: ".oTable", actual: ".oTable tr td:nth-child(2)" }
 	];
 
-	var checkSelector = null, 
-		activeSelector = null,
+	var activeSelector = null,
 		matchedKeywords = {},
 		keywordsToSearch = null, 
 		passedKeywordsElem = null,
@@ -32,7 +31,7 @@
 
 				highlightKeywords(true);
 
-				document.arrive(activeSelector, function() {
+				document.arrive(activeSelector.actual, function() {
 					highlightKeywords(false, this);
 				});
 			});
@@ -58,8 +57,7 @@
 		for (var i=0; i<selectors.length; i++) {
 			var elems = document.querySelectorAll(selectors[i].check);
 			if (elems.length > 0) {
-				checkSelector = selectors[i].check;
-				return selectors[i].actual;
+				return selectors[i];
 			}
 		}
 		return null;
@@ -67,7 +65,7 @@
 
 	function highlightKeywords(reset, elemsToSearch) {
 		if (typeof elemsToSearch === "undefined") {
-			elemsToSearch = document.querySelectorAll(activeSelector);
+			elemsToSearch = document.querySelectorAll(activeSelector.actual);
 
 			// exclude 'more' link
 			/*if (elemsToSearch[0].className == "jsTruncated") {
@@ -83,15 +81,20 @@
 				elemsToSearch = Array.prototype.slice.call(elemsToSearch);
 			}
 		}
+
+		if (activeSelector.subSelector) {
+			elemsToSearch = Utils.querySelectorAll(elemsToSearch, activeSelector.subSelector);
+		}
+
 		elemsToSearch.push(passedKeywordsElem);
 
-		matchedKeywords = myHilitor.apply(elemsToSearch, keywordsToSearch, reset);
+		matchedKeywords = myHilitor.apply(elemsToSearch, keywordsToSearch, reset, activeSelector.ignoreClasses);
 
 		chrome.runtime.sendMessage({ message: "search-result", foundWords: myHilitor.foundMatch, matchedKeywords: matchedKeywords });
 	}
 
 	function keywordsToPassToNextPage() {
-		if (checkSelector == "#jobDescriptionSection") {
+		if (activeSelector.check == "#jobDescriptionSection") {
 			var $applyBtn = document.querySelectorAll(".oBtnPrimary[href^='/job/']")[0];
 
 			if ($applyBtn) {
@@ -115,16 +118,16 @@
 				var tempHilitor = new Hilitor();
 				var matchedKws = tempHilitor.apply(parasToInclude, keywordsToSearch, false);
 
-				var keywrodsParam = "";
+				var keywordsParam = "";
 				for (var i=0; i<matchedKws.length; i++) {
 					if (i !== 0) {
-						keywrodsParam += ",";
+						keywordsParam += ",";
 					}
-					keywrodsParam += matchedKws[i].keyword;
+					keywordsParam += matchedKws[i].keyword;
 				}
 
 				if (keywordsParam.length > 0) {
-					$applyBtn.href += "?_oes=" + encodeURIComponent(keywrodsParam);
+					$applyBtn.href += "?_oes=" + encodeURIComponent(keywordsParam);
 				}
 			}
 		}
