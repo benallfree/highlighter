@@ -27,9 +27,16 @@ var storage = new (function() {
 				keywords.push(skill.keywords[i].toLowerCase());
 			}
 		}
-		return keywords.filter( function(value, index, self) { 
+
+		keywords = keywords.filter( function(value, index, self) { 
 			return self.indexOf(value) === index;
 		});
+
+		keywords = keywords.sort(function(keywordA, keywordB) {
+			return keywordB.length - keywordA.length;
+		});
+
+		return keywords;
 	};
 
 	function storeSkills(skills) {
