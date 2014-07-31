@@ -161,7 +161,6 @@ var highlighter = new (function () {
 					combinedKeywords = getCombinedKeywords(matchedKeywords);
 
 				var text = template.body;
-
 				text = text.replace("[skill_list]", combinedProps.name);
 				text = text.replace("[skill_bullets]", combinedProps.shortDesc);
 				text = text.replace("[skill_descriptions]", combinedProps.longDesc);
