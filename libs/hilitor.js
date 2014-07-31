@@ -113,6 +113,9 @@ function Hilitor(tag)
         match.style.color = "#000";
         match.className = 'hilitor';
 
+        var skillNames = highlighter.getMatchingSkillsNames(regs[0]);
+        match.title = Utils.quoteAttr(skillNames);
+
         var after = node.splitText(regs.index);
         after.nodeValue = after.nodeValue.substring(regs[0].length);
         node.parentNode.insertBefore(match, after);

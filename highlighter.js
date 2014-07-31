@@ -1,11 +1,11 @@
-(function () {
+var highlighter = new (function () {
 	var selectors = [
 		{ check: "#jsJobResults", actual: "#jsJobResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreClasses: ['oMore'] },
 		{ check: "#mcMessages", actual: "#mcMessages .oMessageGrid tr td:nth-child(3), #threadPosts .oMCMessageContent" },
 		// Job description page
 		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory, #jobSkillsSection .oSkills" },
 		// Apply to job page
-		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2", ignoreClasses: ['oMore']},
+		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2, .oFormField-additionalQuestions .hint", ignoreClasses: ['oMore']},
 		{ check: ".jsSearchResults", actual: ".jsSearchResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreClasses: ['oMore']  },
 		{ check: ".oTable", actual: ".oTable tr td:nth-child(2)" }
 	];
@@ -14,6 +14,7 @@
 		matchedKeywords = {},
 		keywordsToSearch = null, 
 		passedKeywordsElem = null,
+		skills = null,
 		myHilitor = new Hilitor();
 	
 	function init() {
@@ -27,12 +28,16 @@
 			chrome.runtime.sendMessage({ message: "get-keywords" }, function(keywords) {
 				keywordsToSearch = keywords;
 
-				keywordsToPassToNextPage();
+				chrome.runtime.sendMessage({ message: "get-skills" }, function(allSkills) {
+					skills = allSkills;
 
-				highlightKeywords(true);
+					keywordsToPassToNextPage();
 
-				document.arrive(activeSelector.actual, function() {
-					highlightKeywords(false, this);
+					highlightKeywords(true);
+
+					document.arrive(activeSelector.actual, function() {
+						highlightKeywords(false, this);
+					});
 				});
 			});
 
@@ -46,7 +51,10 @@
 		}
 		else if (request.message == "search-keywords") {
 			keywordsToSearch = request.keywords;
-			highlightKeywords(true);
+			chrome.runtime.sendMessage({ message: "get-skills" }, function(allSkills) {
+				skills = allSkills;
+				highlightKeywords(true);
+			});
 		}
 		else if (request.message == "compose") {
 			composeTextbox(document.activeElement, request.menuId);
@@ -198,6 +206,38 @@
 		});
 
 		return matchingSkills;
+	}
+
+	this.getMatchingSkillsNames = function(keyword) {
+		var matchingSkills = [];
+
+		keyword = keyword.toLowerCase();
+
+		for (var key in skills) {
+			var skill = skills[key], 
+				skillKeywords = skills[key].keywords;
+
+		    for (var i=0; i<skillKeywords.length; i++) {
+				if (keyword == skillKeywords[i].toLowerCase()) {
+					matchingSkills.push(skill);
+					break;
+				}
+			}
+		}
+
+		matchingSkills = matchingSkills.sort(function(skillA, skillB) {
+			return skillA.name > skillB.name ? 1 : (skillA.name < skillB.name ? -1 : 0);
+		});
+
+		var skillNames = "";
+		for (var i=0; i<matchingSkills.length; i++) {
+			if (i !== 0) {
+				skillNames += ", ";
+			}
+			skillNames += matchingSkills[i].name;
+		}
+
+		return skillNames;
 	};
 
 	function calculateSkillWeight(skill) {
