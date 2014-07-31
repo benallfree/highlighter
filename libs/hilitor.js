@@ -12,6 +12,7 @@ function Hilitor(tag)
   var openLeft = false;
   var openRight = false;
   var matchedKeywords = [];
+  var ignoreClasses = null;
   this.foundMatch = false;
 
   this.setMatchType = function(type)
@@ -52,6 +53,22 @@ function Hilitor(tag)
     return retval;
   };
 
+  this.isNodeAllowed = function(node) {
+    if (node && typeof node.className === "string") {
+      var nodeClasses = node.className;
+      for (var i=0; i<ignoreClasses.length; i++) {
+        if (nodeClasses.indexOf(ignoreClasses[i]) > -1) {
+          return false;
+        }
+      }
+    }
+    else {
+      return true;
+    }
+
+    return true;
+  };
+
   // recursively apply word highlighting
   this.hiliteWords = function(node)
   {
@@ -61,11 +78,11 @@ function Hilitor(tag)
 
     if(node.hasChildNodes()) {
       for(var i=0; i < node.childNodes.length; i++)
-        if (node.childNodes[i].className !== 'hilitor') {
+        if (this.isNodeAllowed(node.childNodes[i])) {
           this.hiliteWords(node.childNodes[i]);
         }
     }
-    if(node.nodeType == 3) { // NODE_TEXT
+    if(node.nodeType == 3) { // NODE_TEXT and not in ignore list
       if((nv = node.nodeValue) && (regs = matchRegex.exec(nv))) {
         if(!wordColor[regs[0].toLowerCase()]) {
           wordColor[regs[0].toLowerCase()] = colors[colorIdx++ % colors.length];
@@ -116,7 +133,7 @@ function Hilitor(tag)
   };
 
   // start highlighting at target node
-  this.apply = function(elems, input, removeExisting)
+  this.apply = function(elems, input, removeExisting, ignClasses)
   {
     if(input == undefined || !input || input.length <= 0) return;
 
@@ -138,6 +155,11 @@ function Hilitor(tag)
     input = input.join("|")
 
     this.setRegex(input);
+
+    ignoreClasses = ['hilitor'];
+    if (ignClasses) {
+      Array.prototype.push.call(ignoreClasses, ignClasses);
+    }
 
     for (var i=0; i<elems.length; i++) {
       this.hiliteWords(elems[i]);
