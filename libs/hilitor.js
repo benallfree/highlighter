@@ -143,13 +143,13 @@ function Hilitor(tag)
 
     if (removeExisting) {
       this.remove();
-    }
 
-    for (var i=0; i<input.length; i++) {
-      matchedKeywords.push({
-        keyword: input[i], 
-        count: 0
-      });
+      for (var i=0; i<input.length; i++) {
+        matchedKeywords.push({
+          keyword: input[i], 
+          count: 0
+        });
+      }
     }
 
     input = input.join("|")
@@ -165,14 +165,18 @@ function Hilitor(tag)
       this.hiliteWords(elems[i]);
     }
 
-    matchedKeywords = matchedKeywords.filter(function(keyword) {
+    var matchedKeywordsFiltered = matchedKeywords.filter(function(keyword) {
       return keyword.count > 0;
     });
 
-    matchedKeywords = matchedKeywords.sort(function(keywordA, keywordB) {
-      return keywordB.count > keywordA.count;
+    matchedKeywordsFiltered = matchedKeywordsFiltered.sort(function(keywordA, keywordB) {
+      var result = keywordB.count - keywordA.count;
+      if (result == 0) {
+        return keywordA.keyword > keywordB.keyword ? 1 : (keywordA.keyword < keywordB.keyword ? -1 : 0);
+      }
+      return result;
     });
 
-    return matchedKeywords;
+    return matchedKeywordsFiltered;
   };
 }

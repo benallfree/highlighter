@@ -194,7 +194,7 @@
 		}
 
 		matchingSkills = matchingSkills.sort(function(skillA, skillB) {
-			return skillB.weight > skillA.weight;
+			return skillB.weight - skillA.weight;
 		});
 
 		return matchingSkills;
