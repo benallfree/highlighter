@@ -124,7 +124,7 @@ var highlighter = new (function () {
 				}
 
 				var tempHilitor = new Hilitor();
-				var matchedKws = tempHilitor.apply(parasToInclude, keywordsToSearch, false);
+				var matchedKws = tempHilitor.apply(parasToInclude, keywordsToSearch, true);
 
 				var keywordsParam = "";
 				for (var i=0; i<matchedKws.length; i++) {
