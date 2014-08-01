@@ -81,7 +81,7 @@ function Hilitor(tag)
           this.hiliteWords(node.childNodes[i]);
         }
     }
-    if(node.nodeType == 3) { // NODE_TEXT and not in ignore list
+    if(node.nodeType == 3) {
       if((nv = node.nodeValue) && (regs = matchRegex.exec(nv))) {
         if(!wordColor[regs[0].toLowerCase()]) {
           wordColor[regs[0].toLowerCase()] = colors[colorIdx++ % colors.length];
@@ -92,17 +92,7 @@ function Hilitor(tag)
         if (node.parentNode.className.indexOf("jsTruncated") === -1) {
           this.foundMatch = true;
 
-          var matchedKeyword = regs[0], 
-            matchedKeywordLowerCase = matchedKeyword.toLowerCase();
-
-          for (var i=0; i<matchedKeywords.length; i++) {
-            var obj = matchedKeywords[i];
-            if (obj.keyword.toLowerCase() == matchedKeywordLowerCase) {
-              obj.keyword = matchedKeyword;
-              obj.count++;
-              break;
-            }
-          }
+          this.addKeywordToMatch(regs[0]);
         }
 
         var match = document.createElement(hiliteTag);
@@ -120,6 +110,27 @@ function Hilitor(tag)
         node.parentNode.insertBefore(match, after);
       }
     };
+  };
+
+  this.addKeywordToMatch = function(matchedKeyword) {
+    var matchedKeywordLowerCase = matchedKeyword.toLowerCase();
+
+    for (var i=0; i<matchedKeywords.length; i++) {
+      var obj = matchedKeywords[i];
+      if (obj.keyword.toLowerCase() == matchedKeywordLowerCase) {
+        obj.keyword = matchedKeyword;
+        obj.count++;
+        break;
+      }
+    }
+
+    var newRegexStr = matchRegex.source.replace("|" + matchedKeywordLowerCase + "|", "|").replace("(" + matchedKeywordLowerCase + "|", "(").replace("|" + matchedKeywordLowerCase + ")", ")"), 
+        newRegex = new RegExp(newRegexStr, "i"), 
+        regs;
+
+    if (regs = newRegex.exec(matchedKeyword)) {
+      this.addKeywordToMatch(regs[0]);
+    }
   };
 
   // remove highlighting
