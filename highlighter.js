@@ -1,12 +1,12 @@
 var highlighter = new (function () {
 	var selectors = [
-		{ check: "#jsJobResults", actual: "#jsJobResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreClasses: ['oMore'] },
+		{ check: "#jsJobResults", actual: "#jsJobResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreNodes: ['.oMore'] },
 		{ check: "#mcMessages", actual: "#mcMessages .oMessageGrid tr td:nth-child(3), #threadPosts .oMCMessageContent" },
 		// Job description page
-		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory, #jobSkillsSection .oSkills" },
+		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory, #jobSkillsSection .oSkills", ignoreNodes: ['strong'] },
 		// Apply to job page
-		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2, .oFormField-additionalQuestions .hint", ignoreClasses: ['oMore']},
-		{ check: ".jsSearchResults", actual: ".jsSearchResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreClasses: ['oMore']  },
+		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2, .oFormField-additionalQuestions .hint", ignoreNodes: ['.oMore']},
+		{ check: ".jsSearchResults", actual: ".jsSearchResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreNodes: ['.oMore']  },
 		{ check: ".oTable", actual: ".oTable tr td:nth-child(2)" }
 	];
 
@@ -96,7 +96,7 @@ var highlighter = new (function () {
 
 		elemsToSearch.push(passedKeywordsElem);
 
-		matchedKeywords = myHilitor.apply(elemsToSearch, keywordsToSearch, reset, activeSelector.ignoreClasses);
+		matchedKeywords = myHilitor.apply(elemsToSearch, keywordsToSearch, reset, activeSelector.ignoreNodes);
 
 		chrome.runtime.sendMessage({ message: "search-result", foundWords: myHilitor.foundMatch, matchedKeywords: matchedKeywords });
 	}

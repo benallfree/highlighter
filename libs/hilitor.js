@@ -12,7 +12,7 @@ function Hilitor(tag)
   var openLeft = false;
   var openRight = false;
   var matchedKeywords = [];
-  var ignoreClasses = null;
+  var ignoreNodes = null;
   this.foundMatch = false;
 
   this.setMatchType = function(type)
@@ -54,10 +54,9 @@ function Hilitor(tag)
   };
 
   this.isNodeAllowed = function(node) {
-    if (node && typeof node.className === "string") {
-      var nodeClasses = node.className;
-      for (var i=0; i<ignoreClasses.length; i++) {
-        if (nodeClasses.indexOf(ignoreClasses[i]) > -1) {
+    if (node && node.nodeType !== 3) {
+      for (var i=0; i<ignoreNodes.length; i++) {
+        if (node.matches(ignoreNodes[i])) {
           return false;
         }
       }
@@ -159,9 +158,9 @@ function Hilitor(tag)
 
     this.setRegex(input);
 
-    ignoreClasses = ['hilitor'];
+    ignoreNodes = ['.hilitor'];
     if (ignClasses) {
-      Array.prototype.push.call(ignoreClasses, ignClasses);
+      Array.prototype.push.call(ignoreNodes, ignClasses);
     }
 
     for (var i=0; i<elems.length; i++) {
