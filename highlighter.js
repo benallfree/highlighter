@@ -57,7 +57,7 @@ var highlighter = new (function () {
 			});
 		}
 		else if (request.message == "compose") {
-			composeTextbox(document.activeElement, request.menuId);
+			composeTextbox(document.activeElement, request.menuId, request.template);
 		}
 	}
 
@@ -141,7 +141,7 @@ var highlighter = new (function () {
 		}
 	}
 
-	function composeTextbox(textbox, menuId) {
+	function composeTextbox(textbox, menuId, template) {
 		chrome.runtime.sendMessage({ message: "get-skills", keywords: matchedKeywords }, function(skills) {
 
 			var matchingSkills = getMatchingSkills(matchedKeywords, skills);
@@ -150,29 +150,11 @@ var highlighter = new (function () {
 				var combinedProps = getCombinedSkillsProps(matchingSkills), 
 					combinedKeywords = getCombinedKeywords(matchedKeywords);
 
-				var text = "";
+				var text = template.body;
 
-				if (menuId == "composeAll" || menuId == "composeSkillNames") {
-					text += combinedProps.name + "? Look no further. ";
-				}
-
-				if (menuId == "composeAll" || menuId == "composeKeywords") {
-					text += "I have deep experience in " + getCombinedKeywords(matchedKeywords) + " and would love to help.";
-					if (menuId == "composeAll") {
-						text += "\n\n";
-					}
-				}
-
-				if (menuId == "composeAll" || menuId == "composeShortDesc") {
-					text += combinedProps.shortDesc + "\n";
-					if (menuId == "composeAll") {
-						text += "\n";
-					}
-				}
-
-				if (menuId == "composeAll" || menuId == "composeLongDesc") {
-					text +=	combinedProps.longDesc + "\n";
-				}
+				text = text.replace("[skill_list]", combinedProps.name);
+				text = text.replace("[skill_bullets]", combinedProps.shortDesc);
+				text = text.replace("[skill_descriptions]", combinedProps.longDesc);
 
 				textbox.value = text;
 			}

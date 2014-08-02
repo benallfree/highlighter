@@ -1,0 +1,75 @@
+body {
+	font-family: sans-serif;
+}
+
+table {
+	font-size: 14px;
+}
+
+table.htable {
+	border: 1px solid gray;
+	border-collapse:collapse;
+	width: 100%;
+}
+
+table.htable tr:nth-child(even) {
+	background-color:#f7f7f7;
+}
+table.htable tr:nth-child(odd)	{ 
+	background-color:#fff;
+}
+
+table.htable th, table.htable td {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+table.htable th:last-child, table.htable td:last-child {
+	border-right: none;
+}
+table.htable .edit {
+	margin-left: 4px;
+}
+table.htable .delete {
+	margin-left: 16px;
+}
+
+.hform table td {
+	padding: 7px;
+}
+.hform table td:last-child {
+	width: 260px;
+}
+
+.add-new-btn {
+	color: black;
+	text-decoration: none;
+	margin-top: 10px;
+	border: 1px solid black;
+	display: inline-block;
+	width: 24px;
+	height: 20px;
+	padding-top: 2px; 
+	text-align: center;
+	font-size: 18px;
+	line-height: 18px;
+	cursor: pointer;
+}
+
+input, textarea {
+	padding: 3px;
+	width: 100%;
+}
+
+.hform button {
+	width: 60px;
+}
+.hform .cancel {
+	margin-left: 40px;
+}
+
+.align-top {
+	vertical-align: top;
+	padding-top: 10px !important;
+}

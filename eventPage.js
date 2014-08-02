@@ -39,40 +39,16 @@ var eventPage = new (function () {
 			contexts: ["editable"]
 		});
 
-		chrome.contextMenus.create({
-			id: "composeAll", 
-			parentId: "compose", 
-			title: "All", 
-			contexts: ["editable"]
-		});
+		var templates = storage.getTemplates();
 
-		chrome.contextMenus.create({
-			id: "composeSkillNames", 
-			parentId: "compose", 
-			title: "Skill names", 
-			contexts: ["editable"]
-		});
-
-		chrome.contextMenus.create({
-			id: "composeKeywords", 
-			parentId: "compose", 
-			title: "Keywords", 
-			contexts: ["editable"]
-		});
-
-		chrome.contextMenus.create({
-			id: "composeShortDesc", 
-			parentId: "compose", 
-			title: "Short descriptions", 
-			contexts: ["editable"]
-		});
-
-		chrome.contextMenus.create({
-			id: "composeLongDesc", 
-			parentId: "compose", 
-			title: "Long descriptions", 
-			contexts: ["editable"]
-		});
+		for (var templateId in templates) {
+			chrome.contextMenus.create({
+				id: "compose_" + templateId, 
+				title: templates[templateId].name,
+				parentId: "compose", 
+				contexts: ["editable"]
+			});
+		}
 	}
 
 	this.createAddKeywordContextMenuForSkill = function(skillName, dontCreateAddAsNew) {
@@ -102,6 +78,21 @@ var eventPage = new (function () {
 		if (Object.keys(skills).length == 0) {
 			chrome.contextMenus.remove("addAsNew");
 		}
+	}
+
+	this.createComposeContextMenuForTemplate = function(templateId, template) {
+		this.removeComposeContextMenuForTemplate(templateId, function() {
+			chrome.contextMenus.create({
+				id: "compose_" + templateId, 
+				title: template.name, 
+				parentId: "compose", 
+				contexts: ["editable"]
+			});
+		});
+	}
+
+	this.removeComposeContextMenuForTemplate = function(templateId, cb) {		
+		chrome.contextMenus.remove("compose_" + templateId, cb);
 	}
 
 	function searchResultsReceived(result, tabId) {
@@ -159,7 +150,10 @@ var eventPage = new (function () {
 	}
 
 	function onComposeClicked(info, tab) {
-		chrome.tabs.sendMessage(tab.id, { message: "compose", menuId: info.menuItemId });
+		var templateId = info.menuItemId.split("_")[1], 
+			template = storage.getTemplate(templateId);
+
+		chrome.tabs.sendMessage(tab.id, { message: "compose", menuId: info.menuItemId, template: template });
 	}
 
 	function createNewSkillWithKeywords(keywords) {
