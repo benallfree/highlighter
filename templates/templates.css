@@ -1,0 +1,19 @@
+table.templatesTbl {
+	text-align: left;
+}
+
+#templateRow {
+	display: none;
+}
+
+#cancel {
+	margin-left: 20px;
+}
+#save {
+	margin-left: 30px;
+}
+
+.help {
+	margin-left: 80px;
+	line-height: 26px;
+}

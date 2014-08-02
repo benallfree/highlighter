@@ -101,4 +101,39 @@ var storage = new (function() {
 		}
 	};
 
+	function storeTemplates(templates) {
+		return storeObject("templates", templates)
+	}
+
+	this.getTemplates = function() {
+		return getObject("templates", {}, storeTemplates);
+	};
+
+	this.addTemplate = function(id, template) {
+		var templates = this.getTemplates();
+
+		templates[id] = template;
+
+		storeTemplates(templates);
+
+		chrome.runtime.getBackgroundPage(function(bg) {
+			bg.eventPage.createComposeContextMenuForTemplate(id, template);
+		});
+	};
+
+	this.removeTemplate = function(id) {
+		var templates = this.getTemplates();
+		delete templates[id];
+		storeTemplates(templates);
+
+		chrome.runtime.getBackgroundPage(function(bg) {
+			bg.eventPage.removeComposeContextMenuForTemplate(id);
+		});
+	}
+
+	this.getTemplate = function(id) {
+		var templates = this.getTemplates();
+		return templates[id];
+	};
+
 })();

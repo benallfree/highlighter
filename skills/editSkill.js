@@ -27,18 +27,11 @@
 			loadSkillFromStorage(key);
 		}
 
-		var keywordsToAdd = getQueryParam("keywords");
+		var keywordsToAdd = Utils.getParameterByName("keywords");
 		if (keywordsToAdd) {
 			keywordsToAdd = JSON.parse(keywordsToAdd);
 			addKeywords(keywordsToAdd);
 		}
-	}
-
-	function getQueryParam(paramName) {
-	    paramName = paramName.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-	    var regex = new RegExp("[\\?&]" + paramName + "=([^&#]*)"),
-	        results = regex.exec(location.search);
-	    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 
 	function addKeywordAutoComplete() {

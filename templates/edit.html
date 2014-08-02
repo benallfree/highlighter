@@ -1,0 +1,41 @@
+<!DOCTYPE html5>
+<html>
+	<head>
+		<title>Add Template - Highlighter </title>
+		<link rel="stylesheet" type="text/css" href="/css/common.css">
+		<link rel="stylesheet" type="text/css" href="templates.css">
+	</head>
+	<body>
+		<h2>Add Template</h2>
+
+		<form id="editForm" class="hform add-keyword">
+			<table>
+				<tr><td>Template Name</td><td><input id="templateName" name="template_name" autofocus required/></td></tr>
+				<tr><td class="align-top">Template Body</td><td><textarea id="templateBody" name="template_body" rows="8" required></textarea></td></tr>
+
+				<tr><td></td><td><button id="cancel" class="cancel" type="button">Cancel</button> <button id="save" class="save" type="submit">Save</button></td></tr>
+			</table>	
+		</form>
+
+		<div class="help">
+			<p>
+				Help: <br/>
+				[skill_list] = skill1, skill2 and skill3 <br/>
+				[skill_bullets] <br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;* skill1 summary <br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;* skill2 summary <br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;* skill3 summary <br/>
+				
+				[skill_descriptions] <br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;* skill1 long description <br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;* skill2 long description <br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;* skill3 long description
+			</p>
+		</div>
+
+		<script src="/libs/autoComplt.js"></script>
+		<script src="/utils.js"></script>
+		<script src="/storage.js"></script>
+		<script src="editTemplate.js"></script>
+	</body>
+</html>
