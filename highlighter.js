@@ -18,7 +18,7 @@ var highlighter = new (function () {
 		myHilitor = new Hilitor();
 	
 	function init() {
-		var keywordsParam = Utils.getParameterByName("_oes");
+		var keywordsParam = Utils.getParameterByName("highlight");
 		passedKeywordsElem = document.createElement("div");
 		passedKeywordsElem.innerText = keywordsParam;
 
@@ -136,11 +136,13 @@ var highlighter = new (function () {
 					if (i !== 0) {
 						keywordsParam += ",";
 					}
-					keywordsParam += matchedKws[i].keyword;
+					for (var j=0; j<matchedKws[i].count; j++) {
+						keywordsParam += matchedKws[i].keyword;
+					}
 				}
 
 				if (keywordsParam.length > 0) {
-					$applyBtn.href += "?_oes=" + encodeURIComponent(keywordsParam);
+					$applyBtn.href += "?highlight=" + encodeURIComponent(keywordsParam);
 				}
 			}
 		}
