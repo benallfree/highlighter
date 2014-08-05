@@ -122,6 +122,9 @@ var eventPage = new (function () {
 			var skills = storage.getSkills();
 			sendResponse(skills);
 		}
+		else if (request.message == "onSkillAdded") {
+			me.onSkillAdded(request.skill);
+		}
 	}
 
 	function onContextMenuClicked(info, tab) {
@@ -157,7 +160,10 @@ var eventPage = new (function () {
 	}
 
 	function createNewSkillWithKeywords(keywords) {
-		chrome.tabs.create({ url: "/skills/edit.html?keywords=" + encodeURIComponent(JSON.stringify(keywords)) });
+		chrome.tabs.query({ currentWindow: true, active: true }, function(tabs) {
+			var url = "chrome-extension://" + chrome.runtime.id + "/skills/edit.html?keywords=" + encodeURIComponent(JSON.stringify(keywords));
+			chrome.tabs.sendMessage(tabs[0].id, { message: "open-overlay", url: url });
+		});
 	}
 
 	function highlightKeywords(keywords, tabId) {
@@ -172,6 +178,11 @@ var eventPage = new (function () {
 			}
 		});
 	}
+
+	this.onSkillAdded = function(skill) {
+		this.createAddKeywordContextMenuForSkill(skill.name);
+		this.highlightKeywordsInAllTabs();
+	};
 
 	init();
 

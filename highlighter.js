@@ -43,6 +43,8 @@ var highlighter = new (function () {
 
 			chrome.runtime.onMessage.addListener(onMessageReceived);
 		}
+
+		window.addEventListener("message", messageFromIframe, false);
 	}
 
 	function onMessageReceived(request, sender, sendResponse) {
@@ -58,6 +60,9 @@ var highlighter = new (function () {
 		}
 		else if (request.message == "compose") {
 			composeTextbox(document.activeElement, request.menuId, request.template);
+		}
+		else if (request.message == "open-overlay") {
+			openOverlay(request.url);
 		}
 	}
 
@@ -170,12 +175,12 @@ var highlighter = new (function () {
 
 			var skillMatchedKeywords = matchedKeywords.filter(function(keyword) {
 				var keywordName = keyword.keyword.toLowerCase();
-			    for (var i=0; i<skillKeywords.length; i++) {
-			    	if (keywordName == skillKeywords[i].toLowerCase()) {
-			    		return true;
-			    	}
- 			    }
- 			    return false;
+				for (var i=0; i<skillKeywords.length; i++) {
+					if (keywordName == skillKeywords[i].toLowerCase()) {
+						return true;
+					}
+				}
+				return false;
 			});
 
 			if (skillMatchedKeywords.length > 0) {
@@ -202,7 +207,7 @@ var highlighter = new (function () {
 			var skill = skills[key], 
 				skillKeywords = skills[key].keywords;
 
-		    for (var i=0; i<skillKeywords.length; i++) {
+			for (var i=0; i<skillKeywords.length; i++) {
 				if (keyword == skillKeywords[i].toLowerCase()) {
 					matchingSkills.push(skill);
 					break;
@@ -256,7 +261,7 @@ var highlighter = new (function () {
 		}
 
 		return combinedProps;
-	};
+	}
 
 	function getCombinedKeywords(keywords) {
 		var combinedKeywords = keywords[0].keyword;
@@ -270,7 +275,29 @@ var highlighter = new (function () {
 		}
 
 		return combinedKeywords;
-	};
+	}
+
+	function openOverlay(url) {
+		var iframe = document.createElement("iframe");
+		iframe.className = "highlighter-overlay";
+		iframe.src = url;
+
+		document.body.appendChild(iframe);
+	}
+
+	function messageFromIframe(event)
+	{
+		if (event.origin.indexOf("chrome-extension" == 0)) {
+			if (event.data.type = "close-overlay") {
+				var iframes = document.getElementsByClassName("highlighter-overlay");
+				if (iframes.length > 0) {
+					var iframe = iframes[iframes.length - 1];
+					iframe.parentElement.removeChild(iframe);
+				}
+			}
+		}
+	}
+
 
 	init();
 })();
