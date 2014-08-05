@@ -55,10 +55,14 @@ var storage = new (function() {
 
 		storeSkills(skills);
 
-		chrome.runtime.getBackgroundPage(function(bg) {
-			bg.eventPage.createAddKeywordContextMenuForSkill(skill.name);
-			bg.eventPage.highlightKeywordsInAllTabs();
-		});
+		if (chrome.runtime.getBackgroundPage) {
+			chrome.runtime.getBackgroundPage(function(bg) {
+				bg.onSkillAdded(skill);
+			});
+		}
+		else {
+			chrome.runtime.sendMessage({ message: "onSkillAdded", skill: skill });
+		}
 	};
 
 	this.removeSkill = function(key) {

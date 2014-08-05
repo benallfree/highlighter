@@ -17,7 +17,12 @@
 		keywordTextbox.addEventListener("keydown", keywordBoxKeyPress);
 
 		cancel.addEventListener("click", function() {
-			location.href = "/skills/index.html";
+			if (self !== top) { // if not opened in iframe
+				parent.postMessage({ type: "close-overlay" }, "*");
+			}
+			else {
+				location.href = "/skills/index.html";
+			}
 		});
 
 		editForm.addEventListener("submit", onFormSubmitted);
@@ -135,7 +140,12 @@
 
 		e.preventDefault();
 
-		location.href = "/skills/index.html";
+		if (self !== top) { // if not opened in iframes
+			parent.postMessage({ type: "close-overlay" }, "*");
+		}
+		else {
+			location.href = "/skills/index.html";
+		}
 	}
 
 	init();
