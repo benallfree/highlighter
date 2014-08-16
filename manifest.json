@@ -13,6 +13,10 @@
 			"matches": ["*://www.odesk.com/*"],
 			"js": ["libs/arrive.js", "utils.js", "libs/hilitor.js", "contentScripts/highlighter.js"],
 			"css": ["contentScripts/highlighter.css"]
+		}, 
+		{
+			"matches": ["*://www.odesk.com/d/home/"],
+			"js": ["contentScripts/contractsAddons.js"]
 		}
 	], 
 
