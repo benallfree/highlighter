@@ -11,8 +11,8 @@
 	"content_scripts": [
 		{
 			"matches": ["*://www.odesk.com/*"],
-			"js": ["libs/arrive.js", "/utils.js", "libs/hilitor.js", "highlighter.js"],
-			"css": ["highlighter.css"]
+			"js": ["libs/arrive.js", "utils.js", "libs/hilitor.js", "contentScripts/highlighter.js"],
+			"css": ["contentScripts/highlighter.css"]
 		}
 	], 
 
