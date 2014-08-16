@@ -1,11 +1,14 @@
 var highlighter = new (function () {
 	var selectors = [
+		// Find work homepage
 		{ check: "#jsJobResults", actual: "#jsJobResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreNodes: ['.oMore'] },
-		{ check: "#mcMessages", actual: "#mcMessages .oMessageGrid tr td:nth-child(3), #threadPosts .oMCMessageContent" },
+		// Messages
+		{ check: "#mcMessages", actual: "#mcMessages .oMessageGrid tr td:nth-child(3), #threadPosts .oMCMessageContent", ignoreNodes: ['a'] },
 		// Job description page
-		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory, #jobSkillsSection .oSkills", ignoreNodes: ['strong'] },
+		{ check: "#jobDescriptionSection", actual: "#jobDescriptionSection, #jobsJobsHeaderTitle, #jobHeaderTopLineSubcategory, #jobSkillsSection .oSkills", ignoreNodes: ['strong,a'] },
 		// Apply to job page
-		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2, .oFormField-additionalQuestions .hint", ignoreNodes: ['.oMore']},
+		{ check: "#jobDetails", actual: "#jobDetails .jsTruncated, #jobDetails .jsFull p:first-child, #jobDetails .oFieldValue>p, #jobDetails .oFieldValue>h2, .oFormField-additionalQuestions .hint", ignoreNodes: ['.oMore,a']},
+		// Job search results
 		{ check: ".jsSearchResults", actual: ".jsSearchResults article", subSelector: ".oRowTitle, .oDescription, .oSkills", ignoreNodes: ['.oMore']  },
 		{ check: ".oTable", actual: ".oTable tr td:nth-child(2)" }
 	];
