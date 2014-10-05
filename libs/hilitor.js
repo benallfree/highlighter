@@ -53,6 +53,11 @@ function Hilitor(tag)
     return retval;
   };
 
+  this.regexEscape = function(str)
+  {
+    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  };
+
   this.isNodeAllowed = function(node) {
     if (node && node.nodeType !== 3) {
       for (var i=0; i<ignoreNodes.length; i++) {
@@ -124,9 +129,13 @@ function Hilitor(tag)
       }
     }
 
-    var newRegexStr = matchRegex.source.replace("|" + matchedKeywordLowerCase + "|", "|").replace("(" + matchedKeywordLowerCase + "|", "(").replace("|" + matchedKeywordLowerCase + ")", ")"), 
+    var escapedLowerCaseKeyword = this.regexEscape(matchedKeywordLowerCase);
+
+    var newRegexStr = matchRegex.source.replace("|" + escapedLowerCaseKeyword + "|", "|").replace("(" + escapedLowerCaseKeyword + "|", "(").replace("|" + escapedLowerCaseKeyword + ")", ")"),
         newRegex = new RegExp(newRegexStr, "i"), 
         regs;
+
+    console.log(escapedLowerCaseKeyword);
 
     if (regs = newRegex.exec(matchedKeyword)) {
       this.addKeywordToMatch(regs[0]);
@@ -159,15 +168,23 @@ function Hilitor(tag)
 
       for (var i=0; i<input.length; i++) {
         matchedKeywords.push({
-          keyword: input[i], 
+          keyword: input[i],
           count: 0
         });
       }
     }
 
-    input = input.join("|")
+    var regexInput = "";
+    for (var i=0; i<input.length; i++)
+    {
+      regexInput += this.regexEscape(input[i]);
+      if (i != input.length - 1)
+      {
+        regexInput += "|";
+      }
+    }
 
-    this.setRegex(input);
+    this.setRegex(regexInput);
 
     ignoreNodes = ['.hilitor'];
     if (ignClasses) {
@@ -193,3 +210,7 @@ function Hilitor(tag)
     return matchedKeywordsFiltered;
   };
 }
+
+RegExp.escape= function(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
